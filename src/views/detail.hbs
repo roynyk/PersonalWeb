@@ -1,0 +1,51 @@
+<!-- ini navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
+    <i class="navbar-brand fas fa-user"></i>
+
+    <div class="ms-auto">
+        <a href="/my-project" class="btn btn-dark">Back</a>
+    </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="container my-5">
+    <!-- TITLE -->
+    <h1 id="project-title" class="text-center fw-bold mb-5"></h1>
+
+    <!-- TOP SECTION -->
+    <div class="row">
+        <!-- IMAGE -->
+        <div class="col-md-8">
+            <img id="project-image" class="img-fluid rounded" alt="project image" />
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="col-md-4">
+            <h5 class="fw-bold mb-3">Duration</h5>
+
+            <p id="project-date">
+                <i class="fa-solid fa-calendar-days me-2"></i>
+            </p>
+
+            <p id="project-duration">
+                <i class="fa-regular fa-clock me-2"></i>
+            </p>
+
+            <h5 class="fw-bold mt-4 mb-3">Technologies</h5>
+
+
+            <div id="project-tech" class="d-flex flex-wrap gap-3"></div>
+        </div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="mt-5">
+        <p id="project-description" style="text-align: justify"></p>
+    </div>
+</div>
+
+<!-- ID TERSEMBUNYI -->
+<p id="hidden-id" style="display: none;">{{id}}</p>
+
+<!-- SCRIPT -->
+<script src="/assets/scripts/detail.js"></script>

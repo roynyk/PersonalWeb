@@ -1,0 +1,158 @@
+body {
+  background: #eee;
+  font-family: Arial;
+  margin: 0;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 100vh;
+  gap: 35px;
+}
+
+/* CARD */
+.main-card {
+  margin: 0 auto;
+  background: white;
+  width: 75%;
+  height: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.tech-item i {
+  font-size: 30px;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* FOTO */
+.profile {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* LEFT & RIGHT BALANCE */
+.my-card-left {
+  width: 55%;
+  text-align: left;
+}
+
+.navbar-nav .nav-item {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.my-card-right {
+  background: white;
+  width: 40%;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  margin-left: 25px;
+}
+
+/* TEXT */
+h3 {
+  margin: 15px 0 10px;
+  background-color: #555;
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 18px;
+}
+
+h2 {
+  font-size: 28px;
+  margin: 10px 0;
+}
+
+p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* SOCIAL */
+.socials {
+  margin-top: 15px;
+}
+
+.socials i {
+  margin: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+  margin-right: 15px;
+}
+
+.socials i:hover {
+  color: purple;
+  transform: scale(1.2);
+}
+
+.socials a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.socials a:hover {
+  text-decoration: none;
+}
+
+/* BUTTON */
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.my-btn {
+  background: purple;
+  color: white;
+  padding: 10px 18px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.my-btn:hover {
+  background: #6a006a;
+}
+
+.my-btn-outline {
+  border: 1px solid purple;
+  padding: 10px 18px;
+  text-decoration: none;
+  color: purple;
+  border-radius: 8px;
+  margin-right: 10px;
+  transition: 0.3s;
+}
+
+.my-btn-outline:hover {
+  background: purple;
+  color: white;
+}

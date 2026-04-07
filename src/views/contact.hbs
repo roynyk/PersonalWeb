@@ -1,0 +1,52 @@
+<!-- Konten Formulir -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <h2 class="text-center mb-4" style="color: #333">GET IN TOUCH</h2>
+
+            <form>
+                <!-- Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="number" class="form-control" id="name" placeholder="Your full name" />
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="name@example.com" />
+                </div>
+
+                <!-- Phone Number -->
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="number" class="form-control" id="phone" placeholder="+62 812 3456 7890" />
+                </div>
+
+                <!-- Subject (Dropdown) -->
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <select class="form-select" id="subject">
+                        <option selected disabled>Select a subject</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="project">Project Discussion</option>
+                        <option value="collab">Collaboration</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Your Message (Textarea) -->
+                <div class="mb-3">
+                    <label for="message" class="form-label">Your Message</label>
+                    <textarea class="form-control" id="message" rows="5"
+                        placeholder="Write your message here..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="my-btn">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
