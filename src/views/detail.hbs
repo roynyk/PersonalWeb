@@ -10,42 +10,50 @@
 <!-- CONTENT -->
 <div class="container my-5">
     <!-- TITLE -->
-    <h1 id="project-title" class="text-center fw-bold mb-5"></h1>
+    <h1 class="text-center fw-bold mb-5">{{project.name}}</h1>
 
     <!-- TOP SECTION -->
     <div class="row">
         <!-- IMAGE -->
         <div class="col-md-8">
-            <img id="project-image" class="img-fluid rounded" alt="project image" />
+            <img src="/assets/img/programmer.png" class="img-fluid rounded" alt="project image" />
         </div>
 
         <!-- RIGHT SIDE -->
         <div class="col-md-4">
             <h5 class="fw-bold mb-3">Duration</h5>
 
-            <p id="project-date">
-                <i class="fa-solid fa-calendar-days me-2"></i>
+            <p>
+                <i class="fa-solid fa-calendar-days me-2"></i> {{project.startDate}} - {{project.endDate}}
             </p>
 
-            <p id="project-duration">
-                <i class="fa-regular fa-clock me-2"></i>
+            <p>
+                <i class="fa-regular fa-clock me-2"></i> {{project.duration}}
             </p>
 
             <h5 class="fw-bold mt-4 mb-3">Technologies</h5>
 
 
-            <div id="project-tech" class="d-flex flex-wrap gap-3"></div>
+            <div class="d-flex flex-wrap gap-3">
+                {{#if project.hasNode}}
+                <div><i class="fab fa-node-js fa-2x"></i> Node.js</div>
+                {{/if}}
+                {{#if project.hasReact}}
+                <div><i class="fab fa-react fa-2x"></i> React.js</div>
+                {{/if}}
+                {{#if project.hasJavaScript}}
+                <div><i class="fab fa-js fa-2x"></i> JavaScript</div>
+                {{/if}}
+                {{#if project.hasBootstrap}}
+                <div><i class="fab fa-bootstrap fa-2x"></i> Bootstrap</div>
+                {{/if}}
+            </div>
         </div>
     </div>
 
     <!-- DESCRIPTION -->
     <div class="mt-5">
-        <p id="project-description" style="text-align: justify"></p>
+        <p style="text-align: justify">{{project.description}}</p>
     </div>
 </div>
-
-<!-- ID TERSEMBUNYI -->
-<p id="hidden-id" style="display: none;">{{id}}</p>
-
-<!-- SCRIPT -->
-<script src="/assets/scripts/detail.js"></script>
+

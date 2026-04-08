@@ -1,0 +1,92 @@
+<!-- FORM EDIT -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <h2 class="text-center mb-4 fw-bold">EDIT MY PROJECT</h2>
+
+            <form action="/my-project/edit/{{project.id}}" method="POST" id="editProjectForm">
+                <!-- Project Name -->
+                <div class="mb-3">
+                    <label class="form-label">Project Name</label>
+                    <input type="text" name="projectName" class="form-control" value="{{project.name}}" required />
+                </div>
+
+                <!-- Date -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" name="startDate" class="form-control" value="{{project.startDate}}"
+                            required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">End Date</label>
+                        <input type="date" name="endDate" class="form-control" value="{{project.endDate}}" required />
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <!-- Perhatikan untuk textarea, nilai bawaannya ditaruh di antara tag pembuka dan penutup -->
+                    <textarea name="description" class="form-control" rows="5"
+                        required>{{project.description}}</textarea>
+                </div>
+
+                <!-- Technologies -->
+                <div class="mb-3">
+                    <label class="form-label">Technologies</label>
+
+                    <div class="row">
+                        <div class="col-6">
+                            {{#if project.hasNode}}
+                            <input type="checkbox" name="technologies" value="node" checked />
+                            {{else}}
+                            <input type="checkbox" name="technologies" value="node" />
+                            {{/if}}
+                            Node Js
+                        </div>
+                        <div class="col-6">
+                            {{#if project.hasReact}}
+                            <input type="checkbox" name="technologies" value="react" checked />
+                            {{else}}
+                            <input type="checkbox" name="technologies" value="react" />
+                            {{/if}}
+                            React Js
+                        </div>
+                        <div class="col-6">
+                            {{#if project.hasJavaScript}}
+                            <input type="checkbox" name="technologies" value="javascript" checked />
+                            {{else}}
+                            <input type="checkbox" name="technologies" value="javascript" />
+                            {{/if}}
+                            JavaScript
+                        </div>
+                        <div class="col-6">
+                            {{#if project.hasBootstrap}}
+                            <input type="checkbox" name="technologies" value="bootstrap" checked />
+                            {{else}}
+                            <input type="checkbox" name="technologies" value="bootstrap" />
+                            {{/if}}
+                            Bootstrap
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload -->
+                <div class="mb-3">
+                    <label class="form-label">Upload Image</label>
+                    <input type="file" name="image" class="form-control" />
+                    <!-- Bisa tambahkan text bantuan di sini misal mengingatkan user tidak wajib isi jika tidak ingin ubah foto -->
+                    <div class="form-text mt-2 text-muted">Abaikan jika tidak ingin mengubah foto.</div>
+                </div>
+
+                <!-- Submit -->
+                <div class="text-end">
+                    <!-- Tombol my-btn sesuai dengan style kustom Anda -->
+                    <button type="submit" class="my-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

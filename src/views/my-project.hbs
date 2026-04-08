@@ -1,95 +1,197 @@
 <!-- FORM -->
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10 col-sm-12">
-            <h2 class="text-center mb-4 fw-bold">ADD MY PROJECT</h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <h2 class="text-center mb-4 fw-bold">ADD MY PROJECT</h2>
 
-            <form id="projectForm">
-                <!-- Project Name -->
-                <div class="mb-3">
-                    <label class="form-label">Project Name</label>
-                    <input type="text" name="projectName" class="form-control" required />
-                </div>
-
-                <!-- Date -->
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Start Date</label>
-                        <input type="date" name="startDate" class="form-control" required />
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">End Date</label>
-                        <input type="date" name="endDate" class="form-control" required />
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    <textarea name="description" class="form-control" rows="5" required></textarea>
-                </div>
-
-                <!-- Technologies -->
-                <div class="mb-3">
-                    <label class="form-label">Technologies</label>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <input type="checkbox" name="technologies" value="node" />
-                            Node Js
-                        </div>
-                        <div class="col-6">
-                            <input type="checkbox" name="technologies" value="react" />
-                            React Js
-                        </div>
-                        <div class="col-6">
-                            <input type="checkbox" name="technologies" value="javascript" />
-                            JavaScript
-                        </div>
-                        <div class="col-6">
-                            <input type="checkbox" name="technologies" value="bootstrap" />
-                            Bootstrap
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Upload -->
-                <div class="mb-3">
-                    <label class="form-label">Upload Image</label>
-                    <input type="file" name="image" class="form-control" />
-                </div>
-
-                <!-- Submit -->
-                <div class="text-end">
-                    <button type="submit" class="my-btn">Submit</button>
-                </div>
-            </form>
-
-            <!-- PROJECT LIST -->
-            <div class="container mt-5">
-                <h2 class="text-center fw-bold mb-4">MY PROJECT</h2>
-
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <div class="d-flex flex-wrap gap-2" id="filter-buttons">
-                        <button id="btn-all" class="my-btn" onclick="filterProjects('all')">All</button>
-                        <button id="btn-node" class="my-btn-outline" onclick="filterProjects('node')">Node JS</button>
-                        <button id="btn-react" class="my-btn-outline" onclick="filterProjects('react')">React
-                            JS</button>
-                        <button id="btn-javascript" class="my-btn-outline"
-                            onclick="filterProjects('javascript')">JavaScript</button>
-                        <button id="btn-bootstrap" class="my-btn-outline"
-                            onclick="filterProjects('bootstrap')">Bootstrap</button>
-                    </div>
-                    <button class="btn btn-danger" onclick="deleteAllProjects()">
-                        Delete All
-                    </button>
-                </div>
-                <!-- rendernya nnti disini -->
-                <div id="project-list" class="row g-4"></div>
-            </div>
+      <form action="/my-project" method="POST" id="projectForm">
+        <!-- Project Name -->
+        <div class="mb-3">
+          <label class="form-label">Project Name</label>
+          <input type="text" name="projectName" class="form-control" required />
         </div>
+
+        <!-- Date -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" name="startDate" class="form-control" required />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date" name="endDate" class="form-control" required />
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            name="description"
+            class="form-control"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Technologies -->
+        <div class="mb-3">
+          <label class="form-label">Technologies</label>
+
+          <div class="row">
+            <div class="col-6">
+              <input type="checkbox" name="technologies" value="node" />
+              Node Js
+            </div>
+            <div class="col-6">
+              <input type="checkbox" name="technologies" value="react" />
+              React Js
+            </div>
+            <div class="col-6">
+              <input type="checkbox" name="technologies" value="javascript" />
+              JavaScript
+            </div>
+            <div class="col-6">
+              <input type="checkbox" name="technologies" value="bootstrap" />
+              Bootstrap
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload -->
+        <div class="mb-3">
+          <label class="form-label">Upload Image</label>
+          <input type="file" name="image" class="form-control" />
+        </div>
+
+        <!-- Submit -->
+        <div class="text-end">
+          <button type="submit" class="my-btn">Submit</button>
+        </div>
+      </form>
+
+      <!-- PROJECT LIST -->
+      <div class="container mt-5">
+        <h2 class="text-center fw-bold mb-4">MY PROJECT</h2>
+
+        <div
+          class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+        >
+          <div class="d-flex flex-wrap gap-2" id="filter-buttons">
+            <button
+              id="btn-all"
+              class="my-btn"
+              onclick="filterProjects('all')"
+            >All</button>
+            <button
+              id="btn-node"
+              class="my-btn-outline"
+              onclick="filterProjects('node')"
+            >Node JS</button>
+            <button
+              id="btn-react"
+              class="my-btn-outline"
+              onclick="filterProjects('react')"
+            >React JS</button>
+            <button
+              id="btn-javascript"
+              class="my-btn-outline"
+              onclick="filterProjects('javascript')"
+            >JavaScript</button>
+            <button
+              id="btn-bootstrap"
+              class="my-btn-outline"
+              onclick="filterProjects('bootstrap')"
+            >Bootstrap</button>
+          </div>
+          {{! <button class="btn btn-danger" onclick="#">
+                        Delete All
+                    </button> }}
+        </div>
+        <!-- rendernya nnti disini -->
+        <div id="project-list" class="row g-4">
+          {{#if projects}}
+            <!-- Looping dimulai di sini -->
+            {{#each projects}}
+              <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                  <!-- Sementara pasang gambar dummy/kosong dulu -->
+                  <img
+                    src="/assets/img/programmer.png"
+                    class="card-img-top"
+                    alt="project image"
+                  />
+
+                  <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{this.name}}</h5>
+
+                    <small class="text-muted mb-2">
+                      <!-- Nanti kita kirim durasi yang sudah dihitung dari backend -->
+                      durasi:
+                      {{this.duration}}
+                    </small>
+
+                    <p class="card-text">
+                      {{this.description}}
+                    </p>
+
+                    <div class="mb-3">
+                      {{#if this.hasNode}}
+                        <i class="fab fa-node-js fa-lg me-2"></i>
+                      {{/if}}
+                      {{#if this.hasReact}}
+                        <i class="fab fa-react fa-lg me-2"></i>
+                      {{/if}}
+                      {{#if this.hasJavaScript}}
+                        <i class="fab fa-js fa-lg me-2"></i>
+                      {{/if}}
+                      {{#if this.hasBootstrap}}
+                        <i class="fab fa-bootstrap fa-lg me-2"></i>
+                      {{/if}}
+                    </div>
+
+                    <a
+                      href="/my-project/{{this.id}}"
+                      style="font-size: 14px; text-decoration: none; margin-bottom: 10px;"
+                    >
+                      detail project
+                    </a>
+
+                    <div class="mt-auto d-flex gap-2 mt-2">
+                      <!-- Tombol Edit diubah menjadi tag <a> -->
+                      <a
+                        href="/my-project/edit/{{this.id}}"
+                        class="btn btn-dark w-50"
+                      >Edit</a>
+
+                      <!-- Tombol Delete dibungkus tag <form> dengan method POST -->
+                      <form
+                        action="/my-project/delete/{{this.id}}"
+                        method="POST"
+                        class="w-50 m-0"
+                      >
+                        <button
+                          type="submit"
+                          class="btn btn-outline-dark w-100"
+                        >Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/each}}
+          {{else}}
+            <div class="col-12">
+              <h2 class="text-center">Belum ada project</h2>
+            </div>
+          {{/if}}
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>
 
-<script src="/assets/scripts/script.js"></script>
+{{!
+<script src="/assets/scripts/script.js"></script> }}
