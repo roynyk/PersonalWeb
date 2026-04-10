@@ -4,6 +4,12 @@
         <div class="col-lg-8 col-md-10 col-sm-12">
             <h2 class="text-center mb-4 fw-bold">EDIT MY PROJECT</h2>
 
+            {{#if flash}}
+            <div class="alert alert-{{flash.type}}" role="alert">
+              {{flash.message}}
+            </div>
+            {{/if}}
+
             <form action="/my-project/edit/{{project.id}}" method="POST" id="editProjectForm">
                 <!-- Project Name -->
                 <div class="mb-3">

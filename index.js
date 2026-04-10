@@ -1,5 +1,8 @@
 import express from "express";
 import { engine } from "express-handlebars";
+import { db } from "./src/config/database.js";
+import { getProjects, getProjectById, getEditProject, createProject, updateProject, deleteProject } from "./src/controllers/projectController.js";
+import session from "express-session";
 
 const app = express();
 const port = 3000;
@@ -7,6 +10,12 @@ const port = 3000;
 // ini tuh supaya backend (express) bisa baca data dari frontend
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+
+app.use(session({
+  secret: "secretkey",
+  resave: false,
+  saveUninitialized: true
+}))
 
 // SETUP EXPRESS-HANDLEBARS
 app.engine(
@@ -92,17 +101,25 @@ app.get("/contact", (req, res) => {
   });
 });
 
-app.get("/my-project", (req, res) => {
-  try {
-    res.render("my-project", {
-      title: "My Project",
-      projects: projects,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+app.get("/my-project", (req, res) => getProjects(req, res, db));
+app.get("/my-project/:id", (req, res) => getProjectById(req, res, db));
+app.post("/my-project", (req, res) => createProject(req, res, db));
+app.get("/my-project/edit/:id", (req, res) => getEditProject(req, res, db));
+app.post("/my-project/edit/:id", (req, res) => updateProject(req, res, db));
+app.post("/my-project/delete/:id", (req, res) => deleteProject(req, res, db));
+
+
+// app.get("/my-project", (req, res) => {
+//   try {
+//     res.render("my-project", {
+//       title: "My Project",
+//       projects: projects,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 app.get("/my-project/:id", async (req, res) => {
   try {
@@ -116,7 +133,6 @@ app.get("/my-project/:id", async (req, res) => {
     res.render("detail", {
       title: "Detail Project",
       project: project,
-      isDetail: true,
     });
   } catch (error) {
     console.log(error);
