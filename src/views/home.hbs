@@ -1,40 +1,68 @@
+{{#if success}}
+  <div class="alert alert-success" role="alert">
+    {{success}}
+  </div>
+{{/if}}
+
+{{#if error}}
+  <div class="alert alert-danger" role="alert">
+    {{error}}
+  </div>
+{{/if}}
+
+<div
+  style="text-align: center; background-color: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #4caf50;"
+>
+  {{#if user}}
+    <p
+      style="margin: 0; color: #2e7d32; font-size: 16px; font-weight: 500;"
+    >Welcome back, <strong>{{user.name}}</strong>!</p>
+  {{else}}
+    <p style="margin: 0; color: #2e7d32; font-size: 16px;">You are not logged
+      in.</p>
+  {{/if}}
+</div>
+
 <div class="main-card">
-    <!-- LEFT SIDE -->
-    <div class="my-card-left">
-        <h1>Hello, Welcome to My Profile</h1>
+  <!-- LEFT SIDE -->
+  <div class="my-card-left">
+    <h1>Hello, Welcome to My Profile</h1>
 
-        <p>
-            Mahasiswa Teknik Informatika semester 7 di Universitas Indraprasta
-            <br />
-            Dengan minat di bidang Web Development. Berpengalaman membangun
-            aplikasi web front-end dan back-end, termasuk website company
-            profile, e-commerce, dan aplikasi Point of Sale. Terampil dalam
-            kepemimpinan, komunikasi tim, dan adaptasi teknologi baru.
-        </p>
+    <p>
+      Mahasiswa Teknik Informatika semester 7 di Universitas Indraprasta
+      <br />
+      Dengan minat di bidang Web Development. Berpengalaman membangun aplikasi
+      web front-end dan back-end, termasuk website company profile, e-commerce,
+      dan aplikasi Point of Sale. Terampil dalam kepemimpinan, komunikasi tim,
+      dan adaptasi teknologi baru.
+    </p>
 
-        <div class="socials">
-            <a href="https://www.instagram.com/nnaaell/">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/roy-natanael-saing/">
-                <i class="fab fa-linkedin"></i>
-            </a>
-        </div>
-
-        <div class="buttons">
-            <a href="/contact" class="my-btn">Contact</a>
-            <a href="https://drive.google.com/file/d/1rOvuR4RNAis0Ah2K0C7yk5PgbNDutceX/view?usp=drive_link"
-                class="my-btn-outline">
-                <i class="fas fa-download"></i> Download CV
-            </a>
-        </div>
+    <div class="socials">
+      <a href="https://www.instagram.com/nnaaell/">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/roy-natanael-saing/">
+        <i class="fab fa-linkedin"></i>
+      </a>
     </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="my-card-right">
-        <img src="./assets/img/potogweh.jpeg" class="profile" />
-
-        <h2>Roy Natanael Saing</h2>
-        <h3>Fullstack Developer</h3>
+    <div class="buttons">
+      <a href="/contact" class="my-btn">Contact</a>
+      <a
+        href="https://drive.google.com/file/d/1rOvuR4RNAis0Ah2K0C7yk5PgbNDutceX/view?usp=drive_link"
+        class="my-btn-outline"
+      >
+        <i class="fas fa-download"></i>
+        Download CV
+      </a>
     </div>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="my-card-right">
+    <img src="./assets/img/potogweh.jpeg" class="profile" />
+
+    <h2>Roy Natanael Saing</h2>
+    <h3>Fullstack Developer</h3>
+  </div>
 </div>

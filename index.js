@@ -1,21 +1,49 @@
 import express from "express";
 import { engine } from "express-handlebars";
 import { db } from "./src/config/database.js";
-import { getProjects, getProjectById, getEditProject, createProject, updateProject, deleteProject } from "./src/controllers/projectController.js";
+import flash from "express-flash";
+import {
+  getProjects,
+  getProjectById,
+  getEditProject,
+  createProject,
+  updateProject,
+  deleteProject,
+} from "./src/controllers/projectController.js";
 import session from "express-session";
+import { register, login, logout } from "./src/controllers/authController.js";
+import { isAuthenticated } from "./middleware/auth.js";
 
 const app = express();
 const port = 3000;
 
 // ini tuh supaya backend (express) bisa baca data dari frontend
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-  secret: "secretkey",
-  resave: false,
-  saveUninitialized: true
-}))
+// SETUP SESSION
+app.use(
+  session({
+    secret: "my-secret-key", // Secret key untuk encrypt session ID
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: false, // Don't create session until something stored
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // Session expires in 1 hour
+      httpOnly: true, // Cookie hanya bisa diakses oleh server
+    },
+  }),
+);
+
+// SETUP FLASH MESSAGE
+app.use(flash());
+
+// ===== MIDDLEWARE - Make session available in all templates =====
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null; // Current user
+  res.locals.success = req.flash("success"); // Success messages
+  res.locals.error = req.flash("error"); // Error messages
+  next();
+});
 
 // SETUP EXPRESS-HANDLEBARS
 app.engine(
@@ -91,23 +119,52 @@ function getDuration(start, end) {
 
 app.get("/", (req, res) => {
   res.render("home", {
-    title: "Home"
+    title: "Home",
+    user: req.session.user, // Kirim data user dari session ke view
   });
 });
 
 app.get("/contact", (req, res) => {
   res.render("contact", {
-    title: "Contact"
+    title: "Contact",
   });
 });
 
 app.get("/my-project", (req, res) => getProjects(req, res, db));
 app.get("/my-project/:id", (req, res) => getProjectById(req, res, db));
-app.post("/my-project", (req, res) => createProject(req, res, db));
-app.get("/my-project/edit/:id", (req, res) => getEditProject(req, res, db));
-app.post("/my-project/edit/:id", (req, res) => updateProject(req, res, db));
-app.post("/my-project/delete/:id", (req, res) => deleteProject(req, res, db));
+app.post("/my-project", isAuthenticated, (req, res) =>
+  createProject(req, res, db),
+);
+app.get("/my-project/edit/:id", isAuthenticated, (req, res) =>
+  getEditProject(req, res, db),
+);
+app.post("/my-project/edit/:id", isAuthenticated, (req, res) =>
+  updateProject(req, res, db),
+);
+app.post("/my-project/delete/:id", isAuthenticated, (req, res) =>
+  deleteProject(req, res, db),
+);
+app.post("/register", (req, res) => register(req, res, db));
+app.post("/login", (req, res) => login(req, res, db));
+// AUTH
+app.get("/login", (req, res) => {
+  const flash = req.session.flash;
+  delete req.session.flash; // Hapus flash setelah ditampilkan
+  res.render("login", {
+    title: "Login Page",
+    flash,
+  });
+});
 
+app.get("/register", (req, res) => {
+  res.render("register", {
+    title: "register page",
+  });
+});
+
+app.get("/logout", (req, res) => {
+  logout(req, res);
+});
 
 // app.get("/my-project", (req, res) => {
 //   try {
@@ -164,7 +221,8 @@ app.post("/my-project/edit/:id", async (req, res) => {
     const { id } = req.params;
     const projectId = parseInt(id);
 
-    const { projectName, startDate, endDate, description, technologies } = req.body;
+    const { projectName, startDate, endDate, description, technologies } =
+      req.body;
 
     const projectIndex = projects.findIndex((p) => p.id === projectId);
     if (projectIndex === -1) {
@@ -194,10 +252,17 @@ app.post("/my-project/edit/:id", async (req, res) => {
 
 app.post("/my-project", async (req, res) => {
   try {
-    const { projectName, startDate, endDate, description, technologies } = req.body;
+    const { projectName, startDate, endDate, description, technologies } =
+      req.body;
 
     //validation
-    if (!projectName || !startDate || !endDate || !description || !technologies) {
+    if (
+      !projectName ||
+      !startDate ||
+      !endDate ||
+      !description ||
+      !technologies
+    ) {
       return res.status(400).send("Semua field harus diisi");
     }
 
@@ -212,7 +277,7 @@ app.post("/my-project", async (req, res) => {
       hasReact: (technologies || []).includes("react"),
       hasJavaScript: (technologies || []).includes("javascript"),
       hasBootstrap: (technologies || []).includes("bootstrap"),
-    }
+    };
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
     projects.push(newProject);
@@ -224,7 +289,6 @@ app.post("/my-project", async (req, res) => {
     res.send("Error adding project");
   }
 });
-
 
 app.post("/my-project/delete/:id", (req, res) => {
   const { id } = req.params;
