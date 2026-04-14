@@ -14,17 +14,11 @@ export async function register(req, res, db) {
     const result = await db.query(query, values);
 
     //FLASH MASSAGE
-    req.session.flash = {
-      type: "success",
-      message: "Akun anda berhasil dibuat!",
-    };
+    req.flash("success", "Akun anda berhasil dibuat!");
 
     res.redirect("/login");
   } catch (error) {
-    req.session.flash = {
-      type: "danger",
-      message: "Terjadi kesalahan!",
-    };
+    req.flash("danger", "Terjadi kesalahan!");
 
     console.error("Error creating user:", error);
     res.send("Server error");

@@ -4,13 +4,20 @@
         <div class="col-lg-8 col-md-10 col-sm-12">
             <h2 class="text-center mb-4 fw-bold">EDIT MY PROJECT</h2>
 
-            {{#if flash}}
-            <div class="alert alert-{{flash.type}}" role="alert">
-              {{flash.message}}
+            {{#if success}}
+            <div class="alert alert-success" role="alert">
+                {{success}}
             </div>
             {{/if}}
 
-            <form action="/my-project/edit/{{project.id}}" method="POST" id="editProjectForm">
+            {{#if error}}
+            <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+            {{/if}}
+
+            <form action="/my-project/edit/{{project.id}}" method="POST" id="editProjectForm"
+                enctype="multipart/form-data">
                 <!-- Project Name -->
                 <div class="mb-3">
                     <label class="form-label">Project Name</label>

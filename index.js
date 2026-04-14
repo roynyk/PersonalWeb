@@ -13,6 +13,8 @@ import {
 import session from "express-session";
 import { register, login, logout } from "./src/controllers/authController.js";
 import { isAuthenticated } from "./middleware/auth.js";
+import upload from "./middleware/multer.js";
+import { handleUploadError } from "./middleware/uploadErrorHandler.js";
 
 const app = express();
 const port = 3000;
@@ -65,6 +67,7 @@ app.set("views", "./src/views");
 
 // middleware untuk mengakses file statis
 app.use("/assets", express.static("./src/assets"));
+app.use("/uploads", express.static("./src/assets/uploads"));
 
 // const projects = [
 //   {
@@ -132,13 +135,13 @@ app.get("/contact", (req, res) => {
 
 app.get("/my-project", (req, res) => getProjects(req, res, db));
 app.get("/my-project/:id", (req, res) => getProjectById(req, res, db));
-app.post("/my-project", isAuthenticated, (req, res) =>
+app.post("/my-project", isAuthenticated, handleUploadError(upload.single("image")), (req, res) =>
   createProject(req, res, db),
 );
 app.get("/my-project/edit/:id", isAuthenticated, (req, res) =>
   getEditProject(req, res, db),
 );
-app.post("/my-project/edit/:id", isAuthenticated, (req, res) =>
+app.post("/my-project/edit/:id", isAuthenticated, handleUploadError(upload.single("image")), (req, res) =>
   updateProject(req, res, db),
 );
 app.post("/my-project/delete/:id", isAuthenticated, (req, res) =>
@@ -148,11 +151,8 @@ app.post("/register", (req, res) => register(req, res, db));
 app.post("/login", (req, res) => login(req, res, db));
 // AUTH
 app.get("/login", (req, res) => {
-  const flash = req.session.flash;
-  delete req.session.flash; // Hapus flash setelah ditampilkan
   res.render("login", {
     title: "Login Page",
-    flash,
   });
 });
 

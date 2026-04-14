@@ -1,3 +1,6 @@
+import fs from "fs";
+
+
 // Fungsi bantuan untuk menghitung durasi
 function getDuration(start, end) {
   const startDate = new Date(start);
@@ -16,8 +19,6 @@ export async function getProjects(req, res, db) {
     const query = "SELECT * FROM projects ORDER BY created_at ASC";
     const result = await db.query(query);
 
-    const flash = req.session.flash;
-    delete req.session.flash;
     // Array data mentah dari database
     const projects = result.rows;
 
@@ -42,7 +43,7 @@ export async function getProjects(req, res, db) {
       project.hasBootstrap = techNames.includes("bootstrap");
     }
 
-    res.render("my-project", { projects: projects, flash: flash });
+    res.render("my-project", { projects: projects });
   } catch (error) {
     console.error("Gagal mengambil data projects dari database:", error);
     res.status(500).send("Terjadi kesalahan pada server");
@@ -94,23 +95,23 @@ export async function createProject(req, res, db) {
 
     const user_id = req.session.user.id; // Ambil user_id dari session
 
+    const image = req.file ? req.file.filename : null;
+
     if (
       !projectName ||
       !startDate ||
       !endDate ||
       !description ||
-      !technologies
+      !technologies ||
+      !image
     ) {
-      req.session.flash = {
-        type: "error",
-        message: "Gagal: Semua kolom form wajib diisi!",
-      };
+      req.flash("error", "Gagal: Semua kolom form wajib diisi!");
       return res.redirect("/my-project");
     }
 
     const projectQuery = `
-            INSERT INTO projects (user_id, name, start_date, end_date, description) 
-            VALUES ($1, $2, $3, $4, $5) 
+            INSERT INTO projects (user_id, name, start_date, end_date, description, image) 
+            VALUES ($1, $2, $3, $4, $5, $6) 
             RETURNING id
         `;
     const projectResult = await db.query(projectQuery, [
@@ -119,13 +120,11 @@ export async function createProject(req, res, db) {
       startDate,
       endDate,
       description,
+      image,
     ]);
     const newProjectId = projectResult.rows[0].id;
 
-    req.session.flash = {
-      type: "success",
-      message: "Project berhasil ditambahkan",
-    };
+    req.flash("success", "Project berhasil ditambahkan");
 
     // teknologi agar bisa lebih dari 1
     if (technologies) {
@@ -156,10 +155,7 @@ export async function createProject(req, res, db) {
 
     res.redirect("/my-project");
   } catch (error) {
-    req.session.flash = {
-      type: "error",
-      message: "Gagal menambahkan project",
-    };
+    req.flash("error", "Gagal menambahkan project");
     console.error("Gagal menambahkan project ke database:", error);
     res.redirect("/my-project");
   }
@@ -199,12 +195,9 @@ export async function getEditProject(req, res, db) {
     project.hasJavaScript = techNames.includes("javascript");
     project.hasBootstrap = techNames.includes("bootstrap");
 
-    const flash = req.session.flash;
-    delete req.session.flash;
     res.render("edit-project", {
       title: "Edit Project",
       project: project,
-      flash: flash,
     });
   } catch (error) {
     console.error("Gagal mengambil data untuk edit project:", error);
@@ -218,6 +211,7 @@ export async function updateProject(req, res, db) {
     const { projectName, startDate, endDate, description } = req.body;
     let { technologies } = req.body;
     const user_id = req.session.user.id; // Ambil user_id dari session
+    const image = req.file ? req.file.filename : null;
 
     if (
       !projectName ||
@@ -226,28 +220,42 @@ export async function updateProject(req, res, db) {
       !description ||
       !technologies
     ) {
-      req.session.flash = {
-        type: "error",
-        message: "Ubah project gagal: Kolom tidak boleh dikosongkan!",
-      };
+      req.flash("error", "Ubah project gagal: Kolom tidak boleh dikosongkan!");
       return res.redirect(`/my-project/edit/${id}`);
     }
 
-    const updateQuery = `
-            UPDATE projects 
-            SET name = $1, start_date = $2, end_date = $3, description = $4 
-            WHERE id = $5 AND user_id = $6
-        `;
-    const values = [projectName, startDate, endDate, description, id, user_id];
-    const result = await db.query(updateQuery, values);
+    // Cek dulu project-nya ada atau tidak & milik user tersebut
+    const checkQuery = "SELECT image FROM projects WHERE id = $1 AND user_id = $2";
+    const checkResult = await db.query(checkQuery, [id, user_id]);
 
-    if (result.rowCount === 0) {
+    if (checkResult.rows.length === 0) {
       req.flash(
         "error",
         "Kamu tidak memiliki izin untuk mengedit project ini!",
       );
       return res.redirect(`/my-project`);
     }
+
+    // Jika ada file baru yang diunggah, hapus file lama
+    if (req.file) {
+      const oldImage = checkResult.rows[0].image;
+      if (oldImage) {
+        const oldImagePath = `src/assets/uploads/${oldImage}`;
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+          console.log(`File lama ${oldImage} berhasil dihapus karena ada update foto baru`);
+        }
+      }
+    }
+
+    const updateQuery = `
+            UPDATE projects 
+            SET name = $1, start_date = $2, end_date = $3, description = $4, image = COALESCE($5, image) 
+            WHERE id = $6 AND user_id = $7
+        `;
+    const values = [projectName, startDate, endDate, description, image, id, user_id];
+    await db.query(updateQuery, values);
+
 
     //Hapus semua teknologi lama yang nempel di tabel project_technologies
     const deleteTechQuery =
@@ -279,16 +287,10 @@ export async function updateProject(req, res, db) {
       }
     }
 
-    req.session.flash = {
-      type: "success",
-      message: "Project berhasil diupdate",
-    };
+    req.flash("success", "Project berhasil diupdate");
     res.redirect("/my-project");
   } catch (error) {
-    req.session.flash = {
-      type: "error",
-      message: "Gagal mengupdate project",
-    };
+    req.flash("error", "Gagal mengupdate project");
     console.error("Gagal mengupdate project:", error);
     res.redirect("/my-project");
   }
@@ -297,20 +299,39 @@ export async function updateProject(req, res, db) {
 export async function deleteProject(req, res, db) {
   try {
     const { id } = req.params;
+    const userId = req.session.user.id;
 
-    const query = "DELETE FROM projects WHERE id = $1";
-    await db.query(query, [id]);
+    // Ambil data project (untuk ambil file name)
+    const selectQuery = "SELECT * FROM projects WHERE id = $1 AND user_id = $2";
+    const result = await db.query(selectQuery, [id, userId]);
 
-    req.session.flash = {
-      type: "success",
-      message: "Project berhasil dihapus",
-    };
+    if (result.rows.length === 0) {
+      req.flash(
+        "error",
+        "Kamu tidak memiliki izin untuk menghapus project ini!",
+      );
+      return res.redirect(`/my-project`);
+    }
+
+    const project = result.rows[0];
+
+    // Delete file jika ada
+    if (project.image) {
+      const imagePath = `src/assets/uploads/${project.image}`;
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log(`File ${project.image} berhasil dihapus`);
+      }
+    }
+
+    // hapus data dari database
+    const query = "DELETE FROM projects WHERE id = $1 AND user_id = $2";
+    await db.query(query, [id, userId]);
+
+    req.flash("success", "Project berhasil dihapus");
     res.redirect("/my-project");
   } catch (error) {
-    req.session.flash = {
-      type: "error",
-      message: "Gagal menghapus project",
-    };
+    req.flash("error", "Gagal menghapus project");
     console.error("Gagal menghapus project:", error);
     res.redirect("/my-project");
   }

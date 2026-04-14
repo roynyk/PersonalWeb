@@ -3,9 +3,15 @@
     <div class="col-lg-6 col-md-8 col-sm-12">
       <h2 class="text-center mb-4" style="color: #333">REGISTER</h2>
 
-      {{#if flash}}
-        <div class="alert alert-{{flash.type}}" role="alert">
-          {{flash.message}}
+      {{#if success}}
+        <div class="alert alert-success" role="alert">
+          {{success}}
+        </div>
+      {{/if}}
+
+      {{#if error}}
+        <div class="alert alert-danger" role="alert">
+          {{error}}
         </div>
       {{/if}}
       <form action="/register" method="POST">
