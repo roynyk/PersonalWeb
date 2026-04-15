@@ -1,6 +1,5 @@
 import fs from "fs";
 
-
 // Fungsi bantuan untuk menghitung durasi
 function getDuration(start, end) {
   const startDate = new Date(start);
@@ -13,19 +12,48 @@ function getDuration(start, end) {
   return months + " Bulan";
 }
 
+const techMap = {
+  node: 1,
+  react: 2,
+  javascript: 3,
+  bootstrap: 4,
+};
+
 export async function getProjects(req, res, db) {
   try {
-    // Tambahkan ORDER BY agar project terbaru ada di paling atas
-    const query = "SELECT * FROM projects ORDER BY created_at ASC";
-    const result = await db.query(query);
+    const { tech } = req.query;
 
-    // Array data mentah dari database
+    // MENGHITUNG DULU, Apakah database kosongan?
+    const checkTotalQuery = "SELECT COUNT(*) FROM projects";
+    const checkTotalResult = await db.query(checkTotalQuery);
+    const hasAnyProject = parseInt(checkTotalResult.rows[0].count) > 0;
+
+    let query = "SELECT * FROM projects ORDER BY created_at DESC";
+    let queryParams = [];
+
+    // JIKA ADA FILTER DARI URL:
+    if (tech && techMap[tech]) {
+      const techId = techMap[tech];
+      query = `
+        SELECT projects.* 
+        FROM projects
+        JOIN project_technologies ON projects.id = project_technologies.project_id
+        WHERE project_technologies.technology_id = $1
+        ORDER BY projects.created_at DESC
+      `;
+      queryParams = [techId];
+    }
+
+    const result = await db.query(query, queryParams);
     const projects = result.rows;
 
     for (let i = 0; i < projects.length; i++) {
       const project = projects[i];
 
       project.duration = getDuration(project.start_date, project.end_date);
+      if (project.description && project.description.length > 60) {
+        project.description = project.description.substring(0, 60) + "...";
+      }
 
       // Ambil List Teknologinya
       const techQuery = `
@@ -43,12 +71,24 @@ export async function getProjects(req, res, db) {
       project.hasBootstrap = techNames.includes("bootstrap");
     }
 
-    res.render("my-project", { projects: projects });
+    // Mengirim 3 data penting ke Handlebars
+    res.render("my-project", {
+      projects: projects,
+      hasAnyProject: hasAnyProject,
+      filterTech: tech,
+      isNode: tech === "node",
+      isReact: tech === "react",
+      isJs: tech === "javascript",
+      isBootstrap: tech === "bootstrap"
+    });
+
   } catch (error) {
     console.error("Gagal mengambil data projects dari database:", error);
-    res.status(500).send("Terjadi kesalahan pada server");
+    req.flash("error", "Terjadi kesalahan saat mengambil database");
+    res.redirect("/");
   }
 }
+
 
 export async function getProjectById(req, res, db) {
   try {
@@ -132,13 +172,6 @@ export async function createProject(req, res, db) {
       if (typeof technologies === "string") {
         technologies = [technologies];
       }
-
-      const techMap = {
-        node: 1,
-        react: 2,
-        javascript: 3,
-        bootstrap: 4,
-      };
 
       // Masukkan relasi datanya ke tabel project_technologies
       for (let i = 0; i < technologies.length; i++) {
@@ -267,13 +300,6 @@ export async function updateProject(req, res, db) {
       if (typeof technologies === "string") {
         technologies = [technologies];
       }
-
-      const techMap = {
-        node: 1,
-        react: 2,
-        javascript: 3,
-        bootstrap: 4,
-      };
 
       for (let i = 0; i < technologies.length; i++) {
         const techName = technologies[i];

@@ -81,20 +81,30 @@
       <!-- PROJECT LIST -->
       <div class="container mt-5">
         <h2 class="text-center fw-bold mb-4">MY PROJECT</h2>
-
+        {{#if hasAnyProject}}
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
           <div class="d-flex flex-wrap gap-2" id="filter-buttons">
-            <button id="btn-all" class="my-btn" onclick="filterProjects('all')">All</button>
-            <button id="btn-node" class="my-btn-outline" onclick="filterProjects('node')">Node JS</button>
-            <button id="btn-react" class="my-btn-outline" onclick="filterProjects('react')">React JS</button>
-            <button id="btn-javascript" class="my-btn-outline"
-              onclick="filterProjects('javascript')">JavaScript</button>
-            <button id="btn-bootstrap" class="my-btn-outline" onclick="filterProjects('bootstrap')">Bootstrap</button>
+            <a href="/my-project"
+              class="{{#if filterTech}}my-btn-outline{{else}}my-btn{{/if}} text-decoration-none">All</a>
+
+            <a href="/my-project?tech=node"
+              class="{{#if isNode}}my-btn{{else}}my-btn-outline{{/if}} text-decoration-none">Node JS</a>
+
+            <a href="/my-project?tech=react"
+              class="{{#if isReact}}my-btn{{else}}my-btn-outline{{/if}} text-decoration-none">React JS</a>
+
+            <a href="/my-project?tech=javascript"
+              class="{{#if isJs}}my-btn{{else}}my-btn-outline{{/if}} text-decoration-none">JavaScript</a>
+
+            <a href="/my-project?tech=bootstrap"
+              class="{{#if isBootstrap}}my-btn{{else}}my-btn-outline{{/if}} text-decoration-none">Bootstrap</a>
+
           </div>
           {{! <button class="btn btn-danger" onclick="#">
             Delete All
           </button> }}
         </div>
+        {{/if}}
         <!-- rendernya nnti disini -->
         <div id="project-list" class="row g-4">
           {{#if projects}}
@@ -154,8 +164,14 @@
           </div>
           {{/each}}
           {{else}}
-          <div class="col-12">
-            <h2 class="text-center">Belum ada project</h2>
+          <div class="col-12 mt-5">
+            {{#if filterTech}}
+            <!-- Kalau dia lagi mencari pakai tombol filter -->
+            <h3 class="text-center text-muted">Belum ada project yang menggunakan {{filterTech}}</h3>
+            {{else}}
+            <!-- Kalau lemarinya memang kosong total dari awal -->
+            <h2 class="text-center">Belum ada project sama sekali</h2>
+            {{/if}}
           </div>
           {{/if}}
         </div>

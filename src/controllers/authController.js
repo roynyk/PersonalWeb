@@ -9,16 +9,16 @@ export async function register(req, res, db) {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const query =
-      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
+      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)";
     const values = [name, email, hashedPassword];
-    const result = await db.query(query, values);
+    await db.query(query, values);
 
     //FLASH MASSAGE
     req.flash("success", "Akun anda berhasil dibuat!");
 
     res.redirect("/login");
   } catch (error) {
-    req.flash("danger", "Terjadi kesalahan!");
+    req.flash("error", "Terjadi kesalahan!");
 
     console.error("Error creating user:", error);
     res.send("Server error");
@@ -69,7 +69,8 @@ export async function logout(req, res) {
   req.session.destroy((err) => {
     if (err) {
       console.error("Error destroying session:", err);
-      return res.send("Error logging out");
+      req.flash("error", "Gagal mengakhiri sesi, silakan coba lagi!");
+      return res.redirect("/");
     }
 
     res.redirect("/login");
