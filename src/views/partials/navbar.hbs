@@ -1,15 +1,8 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary py-3">
+<nav class="navbar navbar-expand-lg bg-body-tertiary py-3 sticky-top shadow-sm">
   <div class="container-fluid">
     <i class="navbar-brand fas fa-user"></i>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -22,9 +15,9 @@
         </li>
       </ul>
       {{#if user}}
-        <a href="/logout" class="my-btn me-2" type="button">Logout</a>
+      <a href="/logout" class="my-btn me-2" type="button">Logout</a>
       {{else}}
-        <a href="/login" class="my-btn me-2" type="button">Login</a>
+      <a href="/login" class="my-btn me-2" type="button">Login</a>
       {{/if}}
       <a href="/contact" class="my-btn" type="button">
         Contact Me
