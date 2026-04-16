@@ -150,6 +150,7 @@
                   detail project
                 </a>
 
+                {{#if this.isOwner}}
                 <div class="mt-auto d-flex gap-2 mt-2">
                   <!-- Tombol Edit diubah menjadi tag <a> -->
                   <a href="/my-project/edit/{{this.id}}" class="btn btn-dark w-50">Edit</a>
@@ -159,6 +160,7 @@
                     <button type="submit" class="btn btn-outline-dark w-100">Delete</button>
                   </form>
                 </div>
+                {{/if}}
               </div>
             </div>
           </div>

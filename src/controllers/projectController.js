@@ -47,8 +47,14 @@ export async function getProjects(req, res, db) {
     const result = await db.query(query, queryParams);
     const projects = result.rows;
 
+    // Ambil ID user yang sedang login (jika ada)
+    const loggedInUserId = req.session.user ? req.session.user.id : null;
+
     for (let i = 0; i < projects.length; i++) {
       const project = projects[i];
+
+      // Berikan tanda apakah project ini milik user yang sedang login
+      project.isOwner = project.user_id === loggedInUserId;
 
       project.duration = getDuration(project.start_date, project.end_date);
       if (project.description && project.description.length > 60) {
@@ -206,6 +212,13 @@ export async function getEditProject(req, res, db) {
     }
 
     const project = projectResult.rows[0];
+
+    // Cek apakah yang mengedit adalah pemiliknya
+    const loggedInUserId = req.session.user ? req.session.user.id : null;
+    if (project.user_id !== loggedInUserId) {
+      req.flash("error", "Kamu tidak memiliki izin untuk mengedit project ini!");
+      return res.redirect("/my-project");
+    }
 
     project.startDate = project.start_date.toISOString().split("T")[0];
     project.endDate = project.end_date.toISOString().split("T")[0];

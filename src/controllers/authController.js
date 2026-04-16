@@ -64,15 +64,10 @@ export async function login(req, res, db) {
 }
 
 export async function logout(req, res) {
+  // Hanya hapus data user dari session, BUKAN menghancurkan seluruh session
+  // Ini karena Flash Message butuh menumpang di dalam session untuk hidup!
+  delete req.session.user;
+
   req.flash("success", "Akun berhasil keluar!");
-
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error destroying session:", err);
-      req.flash("error", "Gagal mengakhiri sesi, silakan coba lagi!");
-      return res.redirect("/");
-    }
-
-    res.redirect("/login");
-  });
+  res.redirect("/login");
 }
